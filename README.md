@@ -34,7 +34,7 @@ After you've selected the Inline Dropdown XBlock, a default question will be ins
 
 Customization
 -------------
-The question and expert answer can both be customized by clicking the `Edit` button on the component:
+The question can be customized by clicking the `Edit` button on the component:
 
 ![Studio View](docs/img/studio_view1.png)
 ![Studio View](docs/img/studio_view2.png)
