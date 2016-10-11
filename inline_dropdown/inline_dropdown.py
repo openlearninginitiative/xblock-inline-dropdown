@@ -180,11 +180,25 @@ class InlineDropdownXBlock(XBlock):
             selected_text = self.selections[key]
             
             if self.correctness[key][selected_text] == 'True':
-                self.current_feedback += '<p class="correct"><strong>(' + str(pos) + ') Correct: </strong>' + self.feedback[key][selected_text] + '</p>'
+                default_feedback = '<p class="correct"><strong>(' + str(pos) + ') Correct</strong></p>'
+                if selected_text in self.feedback[key]:
+                    if self.feedback[key][selected_text] is not None:
+                        self.current_feedback += '<p class="correct"><strong>(' + str(pos) + ') Correct: </strong>' + self.feedback[key][selected_text] + '</p>'
+                    else:
+                        self.current_feedback += default_feedback
+                else:
+                    self.current_feedback += default_feedback
                 self.student_correctness[key] = 'True'
                 correct_count += 1
             else:
-                self.current_feedback += '<p class="incorrect"><strong>(' + str(pos) + ') Incorrect: </strong>' + self.feedback[key][selected_text] + '</p>'
+                default_feedback = '<p class="correct"><strong>(' + str(pos) + ') Incorrect</strong></p>'
+                if selected_text in self.feedback[key]:
+                    if self.feedback[key][selected_text] is not None:
+                        self.current_feedback += '<p class="incorrect"><strong>(' + str(pos) + ') Incorrect: </strong>' + self.feedback[key][selected_text] + '</p>'
+                    else:
+                        self.current_feedback += default_feedback
+                else:
+                    self.current_feedback += default_feedback
                 self.student_correctness[key] = 'False'
                         
         self.score = float(self.weight) * correct_count / len(self.correctness)
