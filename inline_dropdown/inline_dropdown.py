@@ -208,6 +208,7 @@ class InlineDropdownXBlock(XBlock):
             'selections': self.selections,
             'correctness': self.student_correctness,
         })
+        self._publish_problem_check()
 
         self.completed = True
 
@@ -420,5 +421,15 @@ class InlineDropdownXBlock(XBlock):
             {
                 'value': self.score,
                 'max_value': self.weight,
+            }
+        )
+
+    def _publish_problem_check(self):
+        self.runtime.publish(
+            self,
+            'problem_check',
+            {
+                'grade': self.score,
+                'max_grade': self.weight,
             }
         )
