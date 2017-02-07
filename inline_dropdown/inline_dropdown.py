@@ -162,6 +162,16 @@ class InlineDropdownXBlock(XBlock):
         frag.initialize_js('InlineDropdownXBlockInitEdit')
         return frag
 
+    def max_score(self):
+        """
+        Returns the configured number of possible points for this component.
+        Arguments:
+            None
+        Returns:
+            float: The number of possible points for this component
+        """
+        return self.weight if self.has_score else None
+
     @XBlock.json_handler
     def student_submit(self, submissions, suffix=''):
         '''
