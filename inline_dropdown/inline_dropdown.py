@@ -70,37 +70,37 @@ class InlineDropdownXBlock(XBlock):
         default=0.0,
         scope=Scope.user_state,
     )
-    
+
     correctness = Dict(
         help='Correctness of input values',
         scope=Scope.user_state,
         default={},
     )
-    
+
     selection_order = Dict(
         help='Order of selections in body',
         scope=Scope.user_state,
         default={},
     )
-    
+
     selections = Dict(
         help='Saved student input values',
         scope=Scope.user_state,
         default={},
     )
-    
+
     student_correctness = Dict(
         help='Saved student correctness values',
         scope=Scope.user_state,
         default={},
     )
-    
+
     feedback = Dict(
         help='Feedback for input values',
         scope=Scope.user_state,
         default={},
     )
-    
+
     current_feedback = String(
         help='Current feedback state',
         scope=Scope.user_state,
@@ -167,18 +167,18 @@ class InlineDropdownXBlock(XBlock):
         '''
         Save student answer
         '''
-        
+
         self.selections = submissions['selections']
         self.selection_order = submissions['selection_order']
-        
+
         self.current_feedback = ''
-        
+
         correct_count = 0
-        
+
         # use sorted selection_order to iterate through selections dict
         for key,pos in sorted(self.selection_order.iteritems(), key=lambda (k,v): (v,k)):
             selected_text = self.selections[key]
-            
+
             if self.correctness[key][selected_text] == 'True':
                 default_feedback = '<p class="correct"><strong>(' + str(pos) + ') Correct</strong></p>'
                 if selected_text in self.feedback[key]:
@@ -200,10 +200,10 @@ class InlineDropdownXBlock(XBlock):
                 else:
                     self.current_feedback += default_feedback
                 self.student_correctness[key] = 'False'
-                        
+
         self.score = float(self.weight) * correct_count / len(self.correctness)
         self._publish_grade()
-        
+
         self.runtime.publish(self, 'dropdown_selected', {
             'selections': self.selections,
             'correctness': self.student_correctness,
@@ -227,16 +227,16 @@ class InlineDropdownXBlock(XBlock):
         '''
         Reset student answer
         '''
-        
+
         self.score = 0.0
         self.current_feedback = ''
         self.selections = {}
         self.student_correctness = {}
 
         self._publish_grade()
-        
+
         self.completed = False
-        
+
         result = {
             'success': True,
             'problem_progress': self._get_problem_progress(),
@@ -352,9 +352,9 @@ class InlineDropdownXBlock(XBlock):
         '''
         Helper method
         '''
-        
+
         tree = etree.parse(StringIO(xmlstring))
-        
+
         for input_ref in tree.iter('input_ref'):
             for optioninput in tree.iter('optioninput'):
                 select = Element('select')
@@ -373,12 +373,12 @@ class InlineDropdownXBlock(XBlock):
                     input_ref.attrib['xblock_id'] = unicode(self.scope_ids.usage_id)
                     self.correctness[optioninput.attrib['id']] = valuecorrectness
                     self.feedback[optioninput.attrib['id']] = valuefeedback
-                
+
 
         body = tree.xpath('/inline_dropdown/body')
-        
+
         bodystring = etree.tostring(body[0], encoding='unicode')
-        
+
         return bodystring
 
     def _get_unique_id(self):
